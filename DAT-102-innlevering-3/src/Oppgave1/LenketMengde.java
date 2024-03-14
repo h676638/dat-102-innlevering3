@@ -8,16 +8,11 @@ public class LenketMengde<T> implements MengdeADT{
 	}
 	
 	public boolean erTom() {
-		if (value == null && nextNode != null) {
-			return false;
+		if (value == null) {
+			return true;
 		}
 		else {
-			if (nextNode.erTom()) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			return false;
 		}
 	}
 	
@@ -111,8 +106,12 @@ public class LenketMengde<T> implements MengdeADT{
 
 	@Override
 	public void leggTil(Object element) {
-		value = (T)element;
-		nextNode = new LenketMengde<T>();
+		LenketMengde<T> curNode = this;
+		while (curNode.value != null) {
+			curNode = curNode.nextNode;
+		}
+		curNode.value = (T)element;
+		curNode.nextNode = new LenketMengde<T>();
 	}
 
 	@Override
