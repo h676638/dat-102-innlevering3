@@ -1,12 +1,23 @@
 package Oppgave1;
 
-public class TabellMengde<T> implements MengdeADT<T> {
+import java.util.Iterator;
+
+public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
     private final static int STDK = 100; 
     private T[] mengde; 
     private int antall; 
 
     public TabellMengde() {
         this(STDK);
+    }
+    
+    @Override
+    public T[] tilTabell() {
+        T[] tabell = (T[])new Object[antall];
+        
+        System.arraycopy(mengde, 0, tabell, 0, antall);
+        
+        return tabell;
     }
 
     @SuppressWarnings("unchecked")
@@ -50,8 +61,9 @@ public class TabellMengde<T> implements MengdeADT<T> {
 
     @Override
     public boolean erDelmengdeAv(MengdeADT<T> annenMengde) {
-        for (T element : this) { // Original loop (can be kept)
-            if (!annenMengde.inneholder(element)) {
+        T[] annenMengdeTabell = annenMengde.tilTabell();
+        for (T element : mengde) {
+            if (!inneholder(element, annenMengdeTabell)) {
                 return false;
             }
         }
@@ -65,8 +77,9 @@ public class TabellMengde<T> implements MengdeADT<T> {
 
     @Override
     public boolean erDisjunkt(MengdeADT<T> annenMengde) {
-        for (T element : this) {  
-            if (annenMengde.inneholder(element)) {
+        T[] annenMengdeTabell = annenMengde.tilTabell();
+        for (T element : mengde) {  
+            if (inneholder(element, annenMengdeTabell)) {
                 return false;
             }
         }
@@ -76,8 +89,9 @@ public class TabellMengde<T> implements MengdeADT<T> {
     @Override
     public MengdeADT<T> snitt(MengdeADT<T> annenMengde) {
         TabellMengde<T> nyMengde = new TabellMengde<>();
-        for (T element : this) {
-            if (annenMengde.inneholder(element)) {
+        T[] annenMengdeTabell = annenMengde.tilTabell();
+        for (T element : mengde) {
+            if (inneholder(element, annenMengdeTabell)) {
                 nyMengde.leggTil(element);
             }
         }
@@ -87,11 +101,12 @@ public class TabellMengde<T> implements MengdeADT<T> {
     @Override
     public MengdeADT<T> union(MengdeADT<T> annenMengde) {
         TabellMengde<T> nyMengde = new TabellMengde<>();
-        for (T element : this) {
+        for (T element : mengde) {
             nyMengde.leggTil(element);
         }
-        for (T element : annenMengde) {
-            if (!inneholder(element)) {
+        T[] annenMengdeTabell = annenMengde.tilTabell();
+        for (T element : annenMengdeTabell) {
+            if (!inneholder(element, mengde)) {
                 nyMengde.leggTil(element);
             }
         }
@@ -127,12 +142,61 @@ public class TabellMengde<T> implements MengdeADT<T> {
     @Override
     public MengdeADT<T> minus(MengdeADT<T> annenMengde) {
         TabellMengde<T> nyMengde = new TabellMengde<>();
-        for (T element : this) {
-            if (!annenMengde.inneholder(element)) {
+        T[] annenMengdeTabell = annenMengde.tilTabell();
+        for (T element : mengde) {
+            if (!inneholder(element, annenMengdeTabell)) {
                 nyMengde.leggTil(element);
             }
         }
         return nyMengde;
     }
-}
 
+    @Override
+    public void leggTilAlleFra(MengdeADT<T> nyMengde) {
+        for (T element : nyMengde) {
+            leggTil(element);
+        }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new MengdeIterator();
+    }
+
+    private class MengdeIterator implements Iterator<T> {
+        private int current;
+
+        public MengdeIterator() {
+            current = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current < antall;
+        }
+
+        @Override
+        public T next() {
+            if (!hasNext()) {
+                throw new java.util.NoSuchElementException();
+            }
+            T result = mengde[current];
+            current++;
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private boolean inneholder(T element, T[] mengde) {
+        for (T elem : mengde) {
+            if (elem.equals(element)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
