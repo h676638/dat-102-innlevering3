@@ -1,8 +1,7 @@
 package Oppgave1;
 
-import java.util.Iterator;
 
-public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
+public class TabellMengde<T> implements MengdeADT<T> {
     private final static int STDK = 100; 
     private T[] mengde; 
     private int antall; 
@@ -45,9 +44,12 @@ public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
     @Override
     public boolean inneholder(T element) {
         for (int i = 0; i < antall; i++) {
-            if (mengde[i].equals(element)) {
-                return true;
-            }
+        	if (mengde[i] == null) {    
+        		break;
+	        }
+        	if (mengde[i].equals(element)) {
+        		return true;
+        	}
         }
         return false;
     }
@@ -63,6 +65,9 @@ public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
     public boolean erDelmengdeAv(MengdeADT<T> annenMengde) {
         T[] annenMengdeTabell = annenMengde.tilTabell();
         for (T element : mengde) {
+        	if (element == null) {
+        		break;
+        	}
             if (!inneholder(element, annenMengdeTabell)) {
                 return false;
             }
@@ -102,6 +107,9 @@ public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
     public MengdeADT<T> union(MengdeADT<T> annenMengde) {
         TabellMengde<T> nyMengde = new TabellMengde<>();
         for (T element : mengde) {
+        	if (element == null) {
+        		break;
+        	}
             nyMengde.leggTil(element);
         }
         T[] annenMengdeTabell = annenMengde.tilTabell();
@@ -120,7 +128,11 @@ public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
             return null;
         }
         T fjernetElement = mengde[pos];
-        mengde[pos] = mengde[antall - 1];
+        while (pos < mengde.length - 1) {
+        	mengde[pos] = mengde[pos + 1];
+        	pos ++;
+        }
+        mengde[pos] = null;
         antall--;
         return fjernetElement;
     }
@@ -153,49 +165,20 @@ public class TabellMengde<T> implements MengdeADT<T>, Iterable<T> {
 
     @Override
     public void leggTilAlleFra(MengdeADT<T> nyMengde) {
-        for (T element : nyMengde) {
+        for (T element : nyMengde.tilTabell()) {
             leggTil(element);
         }
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return new MengdeIterator();
-    }
-
-    private class MengdeIterator implements Iterator<T> {
-        private int current;
-
-        public MengdeIterator() {
-            current = 0;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return current < antall;
-        }
-
-        @Override
-        public T next() {
-            if (!hasNext()) {
-                throw new java.util.NoSuchElementException();
-            }
-            T result = mengde[current];
-            current++;
-            return result;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
+   
 
     private boolean inneholder(T element, T[] mengde) {
         for (T elem : mengde) {
-            if (elem.equals(element)) {
-                return true;
-            }
+        	if (elem != null) {
+	            if (elem.equals(element)) {
+	                return true;
+	            }
+        	}
         }
         return false;
     }
