@@ -1,12 +1,10 @@
-import static org.junit.Assert.*;
-	import org.junit.Test;
-
-
 package Oppgave1;
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+
 
 public class TestSetToMengde {
-	
-	
 
 	    @Test
 	    public void testErTom() {
@@ -66,8 +64,8 @@ public class TestSetToMengde {
 	        mengde2.leggTil(3);
 	        mengde2.leggTil(4);
 
-	        assertTrue(mengde1.erDisjunktMed(mengde2));
-	        assertFalse(mengde1.erDisjunktMed(mengde1));
+	        assertTrue(mengde1.erDisjunkt(mengde2));
+	        assertFalse(mengde1.erDisjunkt(mengde1));
 	    }
 
 	    @Test
@@ -120,7 +118,7 @@ public class TestSetToMengde {
 	        mengde2.leggTil(3);
 	        mengde2.leggTil(4);
 
-	        MengdeADT<Integer> differensMengde = mengde1.differens(mengde2);
+	        MengdeADT<Integer> differensMengde = mengde1.minus(mengde2);
 
 	        assertTrue(differensMengde.inneholder(1));
 	        assertFalse(differensMengde.inneholder(2));
@@ -143,7 +141,7 @@ public class TestSetToMengde {
 	    }
 
 	    @Test
-	    public void testLeggTilAlle() {
+	    public void testLeggTilAlleFra() {
 	        JavaSetToMengde<Integer> mengde1 = new JavaSetToMengde<>();
 	        mengde1.leggTil(1);
 	        mengde1.leggTil(2);
@@ -152,7 +150,7 @@ public class TestSetToMengde {
 	        mengde2.leggTil(3);
 	        mengde2.leggTil(4);
 
-	        mengde1.leggTilAlle(mengde2);
+	        mengde1.leggTilAlleFra(mengde2);
 
 	        assertTrue(mengde1.inneholder(1));
 	        assertTrue(mengde1.inneholder(2));

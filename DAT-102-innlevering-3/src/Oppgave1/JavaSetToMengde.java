@@ -1,3 +1,4 @@
+package Oppgave1;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class JavaSetToMengde<T> implements MengdeADT<T> {
 
     @Override
     public boolean erLik(MengdeADT<T> mengde) {
-        if (set.size() != mengde.antall()) {
+        if (set.size() != mengde.antallElementer()) {
             return false;
         }
         for (T element : set) {
@@ -42,7 +43,7 @@ public class JavaSetToMengde<T> implements MengdeADT<T> {
     }
 
     @Override
-    public boolean erDisjunktMed(MengdeADT<T> mengde) {
+    public boolean erDisjunkt(MengdeADT<T> mengde) {
         for (T element : set) {
             if (mengde.inneholder(element)) {
                 return false;
@@ -65,13 +66,13 @@ public class JavaSetToMengde<T> implements MengdeADT<T> {
     @Override
     public MengdeADT<T> union(MengdeADT<T> mengde) {
         MengdeADT<T> unionMengde = new JavaSetToMengde<>();
-        unionMengde.leggTilAlle(this);
-        unionMengde.leggTilAlle(mengde);
+        unionMengde.leggTilAlleFra(this);
+        unionMengde.leggTilAlleFra(mengde);
         return unionMengde;
     }
 
     @Override
-    public MengdeADT<T> differens(MengdeADT<T> mengde) {
+    public MengdeADT<T> minus(MengdeADT<T> mengde) {
         MengdeADT<T> differensMengde = new JavaSetToMengde<>();
         for (T element : set) {
             if (!mengde.inneholder(element)) {
@@ -87,24 +88,29 @@ public class JavaSetToMengde<T> implements MengdeADT<T> {
     }
 
     @Override
-    public void fjern(T element) {
+    public T fjern(T element) {
+    	T returnElement = element;
         set.remove(element);
+        return element;
     }
 
     @Override
-    public void leggTilAlle(MengdeADT<T> mengde) {
-        for (T element : mengde) {
+    public void leggTilAlleFra(MengdeADT<T> mengde) {
+        for (T element : mengde.tilTabell()) {
             leggTil(element);
         }
     }
 
     @Override
-    public int antall() {
+    public int antallElementer() {
         return set.size();
     }
 
     @Override
-    public java.util.Iterator<T> iterator() {
-        return set.iterator();
+    public T[] tilTabell() {
+        return (T[]) set.toArray();
     }
+
+
+
 }
