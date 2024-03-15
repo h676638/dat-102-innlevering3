@@ -4,31 +4,39 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 public class Oppg4 {
-	static int searchNumMut = 11; // Change this to change search numbers
 	public static void main(String[] args) {
-		testArray();
-		testHashSet();
+		int[] numbs = ranNumbs();
+		testHashSet(numbs);
+		testArray(numbs);
 	}
 	
-	public static void testHashSet() {
+	public static int[] ranNumbs() {
+		int[] arr = new int[10000];
+		for (int i = 0; i < 10000; i++) {
+			arr[i] = (int) (Math.random() * 100000);
+		}
+		return arr;
+	}
+	
+	public static void testHashSet(int[] numbs) {
 		HashSet<Integer> hashSet = makeHashSet();
 		int hashSetFound = 0;
 		long startTime = System.nanoTime();
 		for (int i = 0; i < 10000; i++) {
-			if (hashSet.contains(i + searchNumMut)) {
+			if (hashSet.contains(numbs[i])) {
 				hashSetFound += 1;
 			}
 		}
 		long endTime = System.nanoTime();
 		System.out.println(hashSetFound + " " + (endTime - startTime));
 	}
-	public static void testArray() {
+	public static void testArray(int[] numbs) {
 		int[] arr = makeArray();
 		Arrays.sort(arr);
 		int arrayFound = 0;
 		long startTime = System.nanoTime();
 		for (int i = 0; i < 10000; i++) {
-			if (Arrays.binarySearch(arr, i + searchNumMut) != -1) {
+			if (Arrays.binarySearch(arr, numbs[i]) != -1) {
 				arrayFound += 1;
 			}
 		}
